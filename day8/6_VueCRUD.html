@@ -25,8 +25,8 @@
 <body>
     <div id="app">
 
-        <div>
-            <table v-if="!editMode">
+        <div v-if="!editMode">
+            <table>
                 <tr>
                     <th>학번</th>
                     <th>이름</th>
@@ -43,7 +43,7 @@
                     <td>{{item.STU_GRADE}}</td>
                     <td>{{item.STU_HEIGHT}}</td>
                     <td><button @click="fnRemove(item.STU_NO)">삭제</button></td>
-                    <td><button @click="fnEditMode(item.STU_NO)">수정</button></td>
+                    <td><button @click="fnEditMode(item)">수정</button></td>
                 </tr>
             </table>
             <div>
@@ -106,23 +106,14 @@
                     type: "GET",
                     data: { stuNo: stuNumber },   // 앞은 key로 서버쪽 파라미터와 같아야하고, 뒷값은 value로 body에서 보낸 값 stuNumber 임 
                     success: function (data) {
-
-                    }
-                });
-
-                $.ajax({  // 다시 서버 데이터를 불러오면 reflash가 자동으로 됨
-                    url: "http://localhost:3009/list",
-                    dataType: "json",
-                    type: "GET",
-                    data: {},
-                    success: function (data) {
-                        alert("삭제되었습니다.")
+                        alert("삭제되었습니다.");
                         self.fnStuList();
+
                     }
                 });
 
             },
-            fnEdit: function () { // body쪽에서 보내는 파라미터 값 -- 하드키로 입력하는 경우
+            fnEdit: function (stuNumber) { // body쪽에서 보내는 파라미터 값 -- 하드키로 입력하는 경우
                 let self = this;
                 if (!confirm("수정 하시겠습니까?")) {
                     return;
@@ -140,31 +131,26 @@
                     type: "GET",
                     data: param,   // 앞에서 미리 param 맵으로 선언함. 
                     success: function (data) {
-
-                    }
-                });
-
-                $.ajax({  // 다시 서버 데이터를 불러오면 reflash가 자동으로 됨
-                    url: "http://localhost:3009/list",
-                    dataType: "json",
-                    type: "GET",
-                    data: {},
-                    success: function (data) {
                         self.fnStuList();
-                        alert("수정되었습니다.")
+                        alert("수정되었습니다.");
+                        self.editMode = false;
+
                     }
                 });
 
             },
+
+
             fnEditMode: function (map) { // 하드키 입력이 아닌 경우 Edit하는 것
                 let self = this;
                 self.info = map;
                 self.name = map.STU_NAME;
-                sefl.dept = map.STU_DEPT;
-                self.editMode = !self.editMode; // 현재 editMode = false
+                self.dept = map.STU_DEPT;
+                self.editMode = true; // !self.editMode
             },
+
             fnAdd: function () {
-                location.href = "7_Insert.html";
+                location.href = "7_VueInsert.html";
 
             }
 

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        #container {
+            width: 700px;
+            height: 200px;
+
+
+        }
+
+        table,
+        tr,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px 20px;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th {
+            background-color: azure;
+        }
+
+        td {
+            width: 400px;
+        }
+
+        button {
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <div id="container">
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <td>{{info.TITLE}}</td>
+                </tr>
+                <tr>
+                    <th>작성자</th>
+                    <td>{{info.USERID}}</td>
+                </tr>
+                <tr>
+                    <th>조회수</th>
+                    <td>{{info.CNT}}</td>
+                </tr>
+                <tr>
+                    <th>작성일</th>
+                    <td>{{info.CTIME}}</td>
+                </tr>
+                <tr id="container">
+                    <th>내용</th>
+                    <td>{{info.CONTENTS}}</td>
+                </tr>
+            </table>
+            <div>
+                <button @click="fnEdit">수정</button> <!--작성페이지와 같음-->
+                <!--삭제후 리스트 페이지로-->
+                <!--삭제 주소는 /board/delete후 리스트 페이지로-->
+                <button @click="fnRemove">삭제</button>
+                <button @click="fnList">목록으로</button> <!--리스트 페이지로-->
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                // 변수 - (key : value)
+                boardNo: "",
+                info: {}
+                // stuNo: self.info.STU_NO
+            };
+        },
+        methods: {
+            // 함수(메소드) - (key : function())
+            fnBoardInfo: function () {  // 한개의 값인 경우 Info... 여러개의 경우 List를 사용
+                let self = this;
+                $.ajax({
+                    url: "http://localhost:3009/board/view",
+                    dataType: "json",
+                    type: "GET",
+                    data: { boardNo: self.boardNo },
+                    success: function (data) {
+                        console.log(data[0]);
+                        self.info = data[0];
+                        // info 대 data관계이므로, 개별적인 것은 self.title = data[].TITLE(실데이타이름)..
+
+                    }
+                });
+            },
+
+            fnRemove: function () {  // 한개의 값인 경우 Info... 여러개의 경우 List를 사용
+                let self = this;
+
+                if (!confirm("정말 삭제하나요?")) {
+                    return;
+                };
+
+                $.ajax({
+                    url: "http://localhost:3009/board/delete",
+                    dataType: "json",
+                    type: "GET",
+                    data: { boardNo: self.boardNo },
+                    success: function (data) {
+                        alert("삭제되었습니다.")
+                        fnList(); // location.href = "board-list.html";
+
+                    }
+                });
+            },
+
+            fnList: function () {
+                location.href = "board-list.html";
+            },
+
+            fnEdit: function () {
+                location.href = `board-edit.html?boardNo=${this.boardNo}`;
+            }
+
+
+
+        }, // 메소드 안에서 함수 작업하기
+        mounted() {
+            // 처음 시작할 때 실행되는 부분
+            const queryParams = new URLSearchParams(window.location.search);  // url로부터 특정값을 축출하는 식으로 정형화되어 있음
+            this.boardNo = queryParams.get('boardNo') || '';
+
+            let self = this;
+            console.log("boardNo -->", self.boardNo);
+            self.fnBoardInfo();
+        }
+    });
+
+
+    app.mount('#app');
+</script>

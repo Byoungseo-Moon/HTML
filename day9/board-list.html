@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        table,
+        tr,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px 20px;
+            border-collapse: collapse;
+        }
+
+        #search {
+            margin: 5px 0px;
+
+        }
+
+        #search select {
+            width: 80px;
+            height: 30px;
+
+        }
+
+        #search input {
+            height: 25px;
+            width: 150px;
+            margin-left: 5px;
+        }
+
+        #search button {
+            height: 30px;
+            width: 50px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 테이블형태로 -->
+        <!-- 번호, 제목, 작성자, 조회수, 작성일(YYYY-MM-DD) -->
+
+        <div id="search">
+            <select v-model="option">
+                <option value="all">::전체::</option>
+                <option value="title">::제목::</option>
+                <option value="user">::작성자::</option>
+            </select>
+            <input v-model="keyword" @keyup.enter="fnBoardList" placeholder="검색어를 입력해 주세요">
+            <button @click="fnBoardList">검색</button>
+            <!--@keyup.enter : 창에 값을 넣고, 엔터를 누르면 동작함  -->
+        </div>
+
+
+        <table>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>작성일</th>
+            </tr>
+            <tr v-for="item in list"> <!--변수에서 만든 list[]임-->
+                <td>{{item.BOARDNO}}</td>
+                <td>
+                    <a href="#" @click="fnView(item.BOARDNO)">{{item.TITLE}}</a>
+                </td>
+                <td>{{item.USERID}}</td>
+                <td>{{item.CNT}}</td>
+                <td>{{item.CTIME}}</td> <!-- 서버에서 TO_CHAR(CDATETIME, 'YYYY-MM-DD')를 통하여 CTIME으로 바꿔놓음-->
+            </tr>
+        </table>
+
+        <button @click="fnAdd">글쓰기</button>
+
+
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                // 변수 - (key : value)
+                list: [],
+                keyword: "",
+                option: "all" // default값
+
+            };
+        },
+        methods: {
+            // 함수(메소드) - (key : function())
+            fnBoardList: function () {
+                let self = this;
+                let param = {
+                    option: self.option,
+                    keyword: self.keyword
+                };
+
+                $.ajax({
+                    url: "http://localhost:3009/board/list",
+                    dataType: "json",
+                    type: "GET",
+                    data: param, //{},
+                    success: function (data) {
+                        console.log(data);
+                        self.list = data.list;
+
+                    }
+                });
+            },
+
+            fnView: function (boardNo) {
+                location.href = `board-view.html?boardNo=${boardNo}`; // 파라미터를 보낼 때..? 이후 값을 보냄 2개이상을 &로 연결사용
+                cntNum++;
+
+            },
+
+            fnAdd: function () {
+                location.href = "board-add.html";
+            }
+
+        }, // 메소드 안에서 함수 작업하기
+        mounted() {
+            // 처음 시작할 때 실행되는 부분
+            let self = this;
+            self.fnBoardList();
+        }
+    });
+
+
+    app.mount('#app');
+</script>
