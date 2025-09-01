@@ -12,8 +12,7 @@
     <style>
         #container {
             width: 700px;
-            height: 200px;
-
+            margin: 20px auto;
 
         }
 
@@ -31,8 +30,8 @@
             background-color: azure;
         }
 
-        td {
-            width: 400px;
+        tr:nth-child(odd) {
+            background-color: #eee;
         }
 
         button {
@@ -110,7 +109,7 @@
                     userId: self.userId,
                     contents: self.contents,
                     kind: self.selectItem,
-                    boardNo: self.boardNo
+                    boardNo: self.boardNo   // insert에서는 sequence로 boardno를 생성
 
                 }
                 $.ajax({

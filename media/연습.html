@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .gallery {
+            width: 700px;
+            margin: 20px auto;
+            display: grid;
+            gap: 5px;
+            grid-template-areas:
+                "photo1 photo1 photo2"
+                "photo1 photo1 photo3"
+                "photo4 photo5 photo6";
+        }
+
+        .photo1 {
+            grid-area: photo1;
+            width: 220px;
+            height: 150px;
+        }
+
+        .photo2 {
+            grid-area: photo2;
+            width: 220px;
+            height: 150px;
+        }
+
+        .photo3 {
+            grid-area: photo3;
+            width: 220ppx;
+            height: 150px;
+        }
+
+        .photo4 {
+            grid-area: photo4;
+            width: 220ppx;
+            height: 150px;
+        }
+
+        .photo5 {
+            grid-area: photo5;
+            width: 220ppx;
+            height: 150px;
+        }
+
+        .photo6 {
+            grid-area: photo6;
+            width: 220ppx;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gallery">
+        <img class="photo1" src="./그림1.jpg">
+        <img class="photo2" src="./그림2.webp">
+        <img class="photo3" src="./그림3.png">
+        <img class="photo4" src="./그림4.jfif">
+        <img class="photo5" src="./그림파일1_실습.jfif">
+        <img class="photo6" src="./그림파일2_실습.jpg">
+    </div>
+
+</body>
+
+</html>

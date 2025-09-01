@@ -122,7 +122,7 @@
                 let param = {
                     stuNo: self.info.STU_NO,
                     name: self.name,
-                    dept: slef.dept
+                    dept: self.dept
                 };
 
                 $.ajax({
@@ -131,8 +131,8 @@
                     type: "GET",
                     data: param,   // 앞에서 미리 param 맵으로 선언함. 
                     success: function (data) {
-                        self.fnStuList();
                         alert("수정되었습니다.");
+                        self.fnStuList();
                         self.editMode = false;
 
                     }

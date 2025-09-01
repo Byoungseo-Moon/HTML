@@ -15,8 +15,8 @@
         <h2>학생추가</h2>
 
         <div>학번 :
-            <template v-if="!checkFlg">
-                <input v-model="stuNo" disabled>
+            <template v-if="checkFlg"> <!-- checkFlg가 true이면 동일 학번이 없어 입력/사용 가능-->
+                <input v-model="stuNo" disabled> <!-- disabled : 입력 못하게함 -->
             </template>
             <template v-else>
                 <input v-model="stuNo">
@@ -73,9 +73,11 @@
                     }
                 });
             },
+
             fnBack: function () {
                 location.href = "6_VueCRUD.html";
             },
+
             fnCheck: function () {
                 let self = this;
                 if (self.stuNo.length != 8) {
@@ -91,7 +93,7 @@
                     success: function (data) {
                         console.log(data);
 
-                        if (data.length != 0) {
+                        if (data.length == 0) { // 서버로 보내진 학번으로 검색이 되지 않으면 data가 없으므로 0
                             alert("사용가능한 학번입니다.");
                             self.checkFlg = true;
                             return;
@@ -100,8 +102,6 @@
                         }
                     }
                 });
-
-
             }
 
         }, // 메소드 안에서 함수 작업하기

@@ -66,7 +66,9 @@
 
                 <tr>
                     <th>작성자</th>
-                    <td><input type="text" v-model="userId"></td>
+                    <td><input type="text" v-model="userId" disabled></td>
+                    <!-- {{userId}} -->
+
                 </tr>
 
                 <tr>
@@ -94,7 +96,7 @@
             return {
                 // 변수 - (key : value)
                 title: "",
-                userId: "",
+                userId: "", // sId = sessionId
                 contents: "",
                 selectItem: 1
 
@@ -132,6 +134,7 @@
         }, // 메소드 안에서 함수 작업하기
         mounted() {
             // 처음 시작할 때 실행되는 부분
+            this.userId = sessionStorage.getItem("sessionId");
 
         }
     });

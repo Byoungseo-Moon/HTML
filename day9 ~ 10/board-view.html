@@ -14,7 +14,6 @@
             width: 700px;
             height: 200px;
 
-
         }
 
         table,
@@ -69,10 +68,12 @@
                 </tr>
             </table>
             <div>
-                <button @click="fnEdit">수정</button> <!--작성페이지와 같음-->
-                <!--삭제후 리스트 페이지로-->
-                <!--삭제 주소는 /board/delete후 리스트 페이지로-->
-                <button @click="fnRemove">삭제</button>
+                <template v-if="sessionId == info.USERID || sessionStatus == 'A'">
+                    <button @click="fnEdit">수정</button> <!--작성페이지와 같음-->
+                    <!--삭제후 리스트 페이지로-->
+                    <!--삭제 주소는 /board/delete후 리스트 페이지로-->
+                    <button @click="fnRemove">삭제</button>
+                </template>
                 <button @click="fnList">목록으로</button> <!--리스트 페이지로-->
             </div>
         </div>
@@ -89,7 +90,9 @@
             return {
                 // 변수 - (key : value)
                 boardNo: "",
-                info: {}
+                info: {},
+                sessionId: "",
+                sessionStatus: ""
                 // stuNo: self.info.STU_NO
             };
         },
@@ -105,6 +108,9 @@
                     success: function (data) {
                         console.log(data[0]);
                         self.info = data[0];
+                        // self.cntNo = data[0].CNT;
+                        // self.cntNo++;
+
                         // info 대 data관계이므로, 개별적인 것은 self.title = data[].TITLE(실데이타이름)..
 
                     }
@@ -144,11 +150,15 @@
         }, // 메소드 안에서 함수 작업하기
         mounted() {
             // 처음 시작할 때 실행되는 부분
+
             const queryParams = new URLSearchParams(window.location.search);  // url로부터 특정값을 축출하는 식으로 정형화되어 있음
             this.boardNo = queryParams.get('boardNo') || '';
 
             let self = this;
             console.log("boardNo -->", self.boardNo);
+
+            this.sessionId = sessionStorage.getItem("sessionId");
+            this.sessionStatus = sessionStorage.getItem("sessionStatus");
             self.fnBoardInfo();
         }
     });
